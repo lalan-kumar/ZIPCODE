@@ -1,0 +1,138 @@
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+public class ZipCaode {
+	
+	public List  readRangeZip(List <Integer[]> listOfZipRange, List collectNumber){
+		//for (list in )
+		for (Integer[] arrayZipCode  : listOfZipRange) {
+			int startInt = arrayZipCode[0];
+			int endInt = arrayZipCode[1];
+				for (int i=startInt; i <= endInt; i++) {
+					collectNumber.add(i);
+				}
+			}
+		Set<Integer> set = new HashSet<>();
+		set.addAll(collectNumber);
+		collectNumber.clear();
+		collectNumber.addAll(set);
+		return collectNumber;
+	}
+
+	
+	////make groups in the lits of sorted zipcode
+	
+	public List createGoupsFromsortedZips(List<Integer> collectNumber) {
+		List listOfZipCode = new ArrayList();
+		//Integer [] arrayZip = {0,0};
+		boolean initial = true;
+		int firstNumofZipArray=0;
+		int lastNumofZipArray=0;
+		int currentNumber=0;
+		
+		List<Integer[]> listArrayOFZipCode = new ArrayList<Integer[]>();
+		
+		for (int i =0; i < collectNumber.size(); i++ ) {
+	
+			if (initial == true) {
+				if (firstNumofZipArray == 0) {
+					firstNumofZipArray = collectNumber.get(i);
+				}
+				currentNumber = collectNumber.get(i);
+				initial = false;
+				continue;
+			}
+			if (initial == false || i == collectNumber.size()-1) {
+				if (currentNumber != collectNumber.get(i)-1 || i == collectNumber.size()-1) {
+					lastNumofZipArray = currentNumber;
+					if (i == collectNumber.size()-1) {
+						lastNumofZipArray = collectNumber.get(i);
+					}
+					Integer [] arrayZip = {0,0};
+					arrayZip[0]=firstNumofZipArray;	
+					arrayZip[1]=lastNumofZipArray;;
+					listArrayOFZipCode.add(arrayZip);
+					firstNumofZipArray = collectNumber.get(i);
+					initial =true;
+				}else {
+					currentNumber = collectNumber.get(i);
+				}
+			}
+		}
+		return listArrayOFZipCode;
+		
+	}
+	
+	public void testZipCode(List<Integer[]> listArrayOFZipCode) {
+		
+		// create list of all the zip-code and remove the dublicates
+		List<Integer> collectNumber = new ArrayList<Integer>();
+		collectNumber =readRangeZip(listArrayOFZipCode, collectNumber);
+		Collections.sort(collectNumber);
+		
+		
+		//make groups in the lits of sorted zipcode
+		listArrayOFZipCode = createGoupsFromsortedZips( collectNumber);
+		
+		for (Integer[] zipCodeRange : listArrayOFZipCode) {
+		    System.out.println("start zipCode: " + zipCodeRange[0]);
+		    System.out.println("end  zipCode: " + zipCodeRange[1]);
+		}
+	}
+	
+
+	public static void main(String[] args) {
+		
+		
+		ZipCaode zipCode = new ZipCaode();
+		System.out.println(" testing -{{94133,94133}, {94200,94299} {94226,94399}--");
+		zipCode.test1();
+		//we can also use assert to validate
+		
+		System.out.println("- testing {94133,94133}, 94200,94299} {94600,94699}-");
+		zipCode.test2();
+		
+	}
+	
+	
+	
+	
+	//{94133,94133}, {94200,94299} {94226,94399}
+	public void test1() {
+		Integer[] arrayZip = {94133,94133};
+		Integer[] arrayZip1 = {94200,94299};
+		//Integer[] arrayZip2 = {94600,94699};
+		Integer[] arrayZip2 = {94226,94399};
+		
+		
+	
+		List<Integer[]> listArrayOFZipCode = new ArrayList<Integer[]>();
+		listArrayOFZipCode.add(arrayZip);
+		listArrayOFZipCode.add(arrayZip1);
+		listArrayOFZipCode.add(arrayZip2);
+		
+		testZipCode(listArrayOFZipCode);
+		
+	}
+	
+	//{94133,94133}, 94200,94299} {94600,94699}-
+	public void test2() {
+		ZipCaode zipCode = new ZipCaode();
+		Integer[] arrayZip = {94133,94133};
+		Integer[] arrayZip1 = {94200,94299};
+		Integer[] arrayZip2 = {94600,94699};
+		
+		
+	
+		List<Integer[]> listArrayOFZipCode = new ArrayList<Integer[]>();
+		listArrayOFZipCode.add(arrayZip);
+		listArrayOFZipCode.add(arrayZip1);
+		listArrayOFZipCode.add(arrayZip2);
+		
+		testZipCode(listArrayOFZipCode);
+	}
+
+}
